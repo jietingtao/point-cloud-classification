@@ -97,13 +97,13 @@ if __name__ == '__main__':
     #       > 'last_XXX': Automatically retrieve the last trained model on dataset XXX
     #       > '(old_)results/Log_YYYY-MM-DD_HH-MM-SS': Directly provide the path of a trained model
 
-    chosen_log = 'results/Log_2024-05-14_21-04-36'
+    chosen_log = 'results\\TJT'
 
     # Choose the index of the checkpoint to load OR None if you want to load the current checkpoint
     chkp_idx = -1
 
     # Choose to test on validation or test split
-    on_val = True
+    on_val = False
 
     # Deal with 'last_XXXXXX' choices
     chosen_log = model_choice(chosen_log)
@@ -145,10 +145,13 @@ if __name__ == '__main__':
 
     #config.augment_noise = 0.0001
     #config.augment_symmetries = False
-    #config.batch_num = 3
-    #config.in_radius = 4
-    config.validation_size = 200
-    config.input_threads = 10
+    config.batch_num = 3
+    config.in_radius = 6
+    
+    #config.validation_size = 200
+    #config.input_threads = 10
+    config.validation_size = 40
+    config.input_threads = 0
 
     ##############
     # Prepare Data

@@ -112,7 +112,7 @@ class ModelTrainer:
         # Path of the result folder
         if config.saving:
             if config.saving_path is None:
-                config.saving_path = time.strftime('results/Log_%Y-%m-%d_%H-%M-%S', time.gmtime())
+                config.saving_path = time.strftime('results\\Log_%Y-%m-%d_%H-%M-%S', time.gmtime())
             if not exists(config.saving_path):
                 makedirs(config.saving_path)
             config.save()
@@ -469,7 +469,6 @@ class ModelTrainer:
 
         # Start validation loop
         for i, batch in enumerate(val_loader):
-
             # New time
             t = t[-1:]
             t += [time.time()]
@@ -585,11 +584,11 @@ class ModelTrainer:
             if val_loader.dataset.use_potentials:
                 pot_path = join(config.saving_path, 'potentials')
                 if not exists(pot_path):
-                    makedirs(pot_path)
+                    makedirs(pot_path)               
                 files = val_loader.dataset.files
                 for i, file_path in enumerate(files):
                     pot_points = np.array(val_loader.dataset.pot_trees[i].data, copy=False)
-                    cloud_name = file_path.split('/')[-1]
+                    cloud_name = file_path.split('\\')[-1]
                     pot_name = join(pot_path, cloud_name)
                     pots = val_loader.dataset.potentials[i].numpy().astype(np.float32)
                     write_ply(pot_name,
@@ -628,7 +627,7 @@ class ModelTrainer:
                 preds = (sub_preds[val_loader.dataset.test_proj[i]]).astype(np.int32)
 
                 # Path of saved validation file
-                cloud_name = file_path.split('/')[-1]
+                cloud_name = file_path.split('\\')[-1]
                 val_name = join(val_path, cloud_name)
 
                 # Save file

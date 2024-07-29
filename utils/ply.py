@@ -25,6 +25,9 @@
 # Basic libs
 import numpy as np
 import sys
+import os
+from os import makedirs, remove
+from os.path import exists, join
 
 
 # Define PLY types
@@ -267,6 +270,7 @@ def write_ply(filename, field_list, field_names, triangular_faces=None):
     if (n_fields != len(field_names)):
         print('wrong number of field names')
         return False
+
 
     # Add extension if not there
     if not filename.endswith('.ply'):

@@ -83,9 +83,10 @@ class Toronto3DDataset(PointCloudDataset):
 
         # List of classes ignored during training (can be empty)
         self.ignored_labels = np.array([0])
+        #self.ignored_labels = []
 
         # Dataset folder
-        self.path = '../../Data/Toronto3D'
+        self.path = '..\\..\\Data\\Toronto3D'
 
         # Type of task conducted on this dataset
         self.dataset_task = 'cloud_segmentation'
@@ -105,21 +106,23 @@ class Toronto3DDataset(PointCloudDataset):
 
         # Path of the training files
         self.train_path = 'train'
+        #self.train_path = '../../Data/Toronto3D'
 
         # List of files to process
         ply_path = join(self.path, self.train_path)
+    
 
         # Proportion of validation scenes
-        self.cloud_names = ['L001', 'L002', 'L003', 'L004']
+        self.cloud_names = ['L001', 'L002', 'L003', 'L004','L007']
         self.all_splits = list(range(len(self.cloud_names)))
-        self.validation_split = 1
-        self.test_splits = 1
+        self.validation_split = 4
+        self.test_splits = 4
         self.train_splits = [0, 2, 3]
 
         # Define offset
         self.UTM_OFFSET = [627285, 4841948, 0]
 
-        self.test_cloud_names = ['L002']
+        self.test_cloud_names = ['L006']
 
         # Number of models used per epoch
         if self.set == 'training':
@@ -667,12 +670,19 @@ class Toronto3DDataset(PointCloudDataset):
 
             print('\nPreparing ply for cloud {:s}\n'.format(cloud_name))
 
-            pc = read_ply(join(self.path, 'original_ply/' + cloud_name + '.ply'))
-            xyz = np.vstack((pc['x'] - self.UTM_OFFSET[0], pc['y'] - self.UTM_OFFSET[1], pc['z'] - self.UTM_OFFSET[2])).T.astype(np.float32)
+            pc = read_ply(join(self.path, 'original_ply\\' + cloud_name + '.ply'))
+            
+            if cloud_name == 'L007':
+                xyz = np.vstack((pc['x']+50, pc['y']+200, pc['z']+5)).T.astype(np.float32)
+                #labels = 0*pc['scalar_Label'].astype(np.uint8)
+            else:
+                xyz = np.vstack((pc['x'] - self.UTM_OFFSET[0], pc['y'] - self.UTM_OFFSET[1], pc['z'] - self.UTM_OFFSET[2])).T.astype(np.float32)
+            labels = pc['scalar_Label'].astype(np.uint8)
+
             color = np.vstack((pc['red'], pc['green'], pc['blue'])).T.astype(np.uint8)
             intensity = pc['scalar_Intensity'].astype(np.uint8)
+            #intensity = np.vstack(0).astype(np.uint8)
             rgbi = np.hstack((color, intensity.reshape(-1, 1)))
-            labels = pc['scalar_Label'].astype(np.uint8)
 
             # Save as ply
             write_ply(join(ply_path, cloud_name + '.ply'),
@@ -680,6 +690,7 @@ class Toronto3DDataset(PointCloudDataset):
                     ['x', 'y', 'z', 'red', 'green', 'blue', 'scalar_Intensity', 'scalar_Label'])
 
         print('Done in {:.1f}s'.format(time.time() - t0))
+        
         return
 
     def load_subsampled_clouds(self):

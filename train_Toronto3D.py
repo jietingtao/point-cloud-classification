@@ -96,13 +96,13 @@ class Toronto3DConfig(Config):
     # Number of kernel points
     num_kernel_points = 15
 
-    # Radius of the input sphere (decrease value to reduce memory cost)
-    in_radius = 3.0
+    # Radius of the input sphere (decrease value to reduce memory cost 3.0)
+    in_radius = 9.0
 
-    # Size of the first subsampling grid in meter (increase value to reduce memory cost)
-    first_subsampling_dl = 0.08
+    # Size of the first subsampling grid in meter (increase value to reduce memory cost 0.08)
+    first_subsampling_dl = 0.03
 
-    # Radius of convolution in "number grid cell". (2.5 is the standard value)
+    # Radius of convolution in "number grid cell". (2.5 is the standard value) 
     conv_radius = 2.5
 
     # Radius of deformable convolution in "number grid cell". Larger so that deformed kernel can spread out
@@ -119,7 +119,7 @@ class Toronto3DConfig(Config):
 
     # Choice of input features
     first_features_dim = 128
-    in_features_dim = 4
+    in_features_dim = 1
 
     # Can the network learn modulations
     modulated = False
@@ -140,7 +140,7 @@ class Toronto3DConfig(Config):
     # Training parameters
     #####################
 
-    # Maximal number of epochs
+    # Maximal number of epochs 400
     max_epoch = 400
 
     # Learning rate management
@@ -152,14 +152,14 @@ class Toronto3DConfig(Config):
     # Number of batch (decrease to reduce memory cost, but it should remain > 3 for stability)
     batch_num = 4
 
-    # Number of steps per epochs
-    epoch_steps = 500
+    # Number of steps per epochs 500
+    epoch_steps = 50
 
-    # Number of validation examples per epoch
-    validation_size = 50
+    # Number of validation examples per epoch 50
+    validation_size = 40
 
-    # Number of epoch between each checkpoint
-    checkpoint_gap = 50
+    # Number of epoch between each checkpoint 50
+    checkpoint_gap = 1
 
     # Augmentations
     augment_scale_anisotropic = True
@@ -213,7 +213,7 @@ if __name__ == '__main__':
     if previous_training_path:
 
         # Find all snapshot in the chosen training folder
-        chkp_path = os.path.join('results/Toronto3D', previous_training_path, 'checkpoints')
+        chkp_path = os.path.join(previous_training_path, 'checkpoints')
         chkps = [f for f in os.listdir(chkp_path) if f[:4] == 'chkp']
 
         # Find which snapshot to restore
@@ -221,7 +221,7 @@ if __name__ == '__main__':
             chosen_chkp = 'current_chkp.tar'
         else:
             chosen_chkp = np.sort(chkps)[chkp_idx]
-        chosen_chkp = os.path.join('results/Toronto3D', previous_training_path, 'checkpoints', chosen_chkp)
+        chosen_chkp = os.path.join(previous_training_path, 'checkpoints', chosen_chkp)
 
     else:
         chosen_chkp = None
@@ -237,7 +237,7 @@ if __name__ == '__main__':
     # Initialize configuration class
     config = Toronto3DConfig()
     if previous_training_path:
-        config.load(os.path.join('results/Toronto3D', previous_training_path))
+        config.load(os.path.join( previous_training_path))
         config.saving_path = None
 
     # Get path from argument if given
